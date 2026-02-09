@@ -2,219 +2,242 @@
 
 import { useState, useEffect } from 'react'
 
-export default function InteractivePage() {
-  const [clicks, setClicks] = useState(0)
-  const [time, setTime] = useState(new Date())
-  const [status, setStatus] = useState('🟢 Online')
-  const [tasks, setTasks] = useState(['Dashboard deployed', 'Team ready', 'Features pending'])
+export default function TeamDashboard() {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [teamMembers] = useState([
+    { id: 1, name: 'Dall', role: 'Team Lead', status: 'online', workload: 85, avatar: 'D', tasks: 12 },
+    { id: 2, name: 'BOBB', role: 'AI Agent', status: 'online', workload: 92, avatar: 'B', tasks: 8 },
+    { id: 3, name: 'Sarah', role: 'Developer', status: 'away', workload: 67, avatar: 'S', tasks: 5 },
+    { id: 4, name: 'Mike', role: 'Designer', status: 'online', workload: 73, avatar: 'M', tasks: 7 },
+    { id: 5, name: 'Alex', role: 'Analyst', status: 'busy', workload: 88, avatar: 'A', tasks: 9 }
+  ])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date())
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
+  const [tasks] = useState([
+    { id: 1, title: 'Dashboard UI Implementation', assignee: 'Sarah', priority: 'High', status: 'In Progress', due: '2026-02-10' },
+    { id: 2, title: 'API Integration Setup', assignee: 'BOBB', priority: 'High', status: 'In Progress', due: '2026-02-09' },
+    { id: 3, title: 'User Authentication Flow', assignee: 'Mike', priority: 'Medium', status: 'Review', due: '2026-02-12' },
+    { id: 4, title: 'Performance Optimization', assignee: 'Alex', priority: 'Low', status: 'Planning', due: '2026-02-15' },
+    { id: 5, title: 'Mobile Responsive Design', assignee: 'Sarah', priority: 'Medium', status: 'Todo', due: '2026-02-14' },
+    { id: 6, title: 'Data Analytics Dashboard', assignee: 'Alex', priority: 'High', status: 'In Progress', due: '2026-02-11' }
+  ])
 
-  const addTask = () => {
-    const newTasks = [
-      'File system integration',
-      'Agent workspace setup', 
-      'Team collaboration tools',
-      'Real-time notifications',
-      'Security implementation',
-      'Performance optimization'
-    ]
-    const randomTask = newTasks[Math.floor(Math.random() * newTasks.length)]
-    setTasks(prev => [...prev, randomTask])
+  const [files] = useState([
+    { name: 'AGENTS.md', size: '7.8 KB', modified: '2 hours ago', type: 'markdown' },
+    { name: 'SOUL.md', size: '1.7 KB', modified: '4 hours ago', type: 'markdown' },
+    { name: 'dashboard-architecture.md', size: '13.2 KB', modified: '1 day ago', type: 'markdown' },
+    { name: 'team-structure.json', size: '2.4 KB', modified: '3 hours ago', type: 'json' },
+    { name: 'marketing-strategy.md', size: '25.6 KB', modified: '5 hours ago', type: 'markdown' }
+  ])
+
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'online': return 'status-online'
+      case 'away': return 'status-away'
+      case 'busy': return 'status-busy'
+      default: return 'status-away'
+    }
   }
 
-  const toggleStatus = () => {
-    setStatus(prev => prev.includes('🟢') ? '🔴 Offline' : '🟢 Online')
+  const getWorkloadLevel = (workload) => {
+    if (workload < 50) return 'low'
+    if (workload < 80) return 'medium'
+    return 'high'
+  }
+
+  const getPriorityColor = (priority) => {
+    switch(priority) {
+      case 'High': return '#ef4444'
+      case 'Medium': return '#f59e0b'
+      case 'Low': return '#10b981'
+      default: return '#6b7280'
+    }
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      padding: '20px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div className="card" style={{
-        padding: '40px',
-        maxWidth: '800px',
-        width: '100%',
-        textAlign: 'center'
-      }}>
-        <div className="pulse" style={{ marginBottom: '30px' }}>
-          <h1 style={{
-            fontSize: '4rem',
-            background: 'linear-gradient(45deg, #667eea, #764ba2)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            margin: '0 0 10px 0',
-            fontWeight: 'bold'
-          }}>
-            🚀 Dashboard
-          </h1>
-          <p style={{
-            fontSize: '1.2rem',
-            color: '#666',
-            margin: '0 0 20px 0'
-          }}>
-            Fully Interactive • Live on Vercel
-          </p>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '20px',
-          marginBottom: '30px'
-        }}>
-          <div style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            padding: '20px',
-            borderRadius: '15px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ margin: '0 0 10px 0' }}>Live Clock</h3>
-            <p style={{ 
-              margin: 0, 
-              fontSize: '1.1rem',
-              fontFamily: 'monospace' 
-            }}>
-              {time.toLocaleTimeString()}
-            </p>
+    <div>
+      <div className="header">
+        <nav className="nav">
+          <h1>🚀 Team Dashboard</h1>
+          <div className="nav-links">
+            <a href="#" className="nav-link active">Dashboard</a>
+            <a href="#" className="nav-link">Projects</a>
+            <a href="#" className="nav-link">Files</a>
+            <a href="#" className="nav-link">Settings</a>
           </div>
+        </nav>
+      </div>
 
-          <div style={{
-            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            color: 'white',
-            padding: '20px',
-            borderRadius: '15px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ margin: '0 0 10px 0' }}>Status</h3>
-            <button 
-              className="button"
-              onClick={toggleStatus}
-              style={{
-                background: 'rgba(255,255,255,0.2)',
-                border: '1px solid rgba(255,255,255,0.3)'
-              }}
-            >
-              {status}
-            </button>
+      <div className="container">
+        {/* Overview Metrics */}
+        <div className="grid grid-3" style={{ marginBottom: '30px' }}>
+          <div className="card">
+            <div className="metric">
+              <div className="metric-value">{teamMembers.length}</div>
+              <div className="metric-label">Team Members</div>
+            </div>
           </div>
-
-          <div style={{
-            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-            color: 'white',
-            padding: '20px',
-            borderRadius: '15px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ margin: '0 0 10px 0' }}>Interactions</h3>
-            <button 
-              className="button"
-              onClick={() => setClicks(clicks + 1)}
-              style={{
-                background: 'rgba(255,255,255,0.2)',
-                border: '1px solid rgba(255,255,255,0.3)'
-              }}
-            >
-              Clicked {clicks} times
-            </button>
+          <div className="card">
+            <div className="metric">
+              <div className="metric-value">{tasks.filter(t => t.status === 'In Progress').length}</div>
+              <div className="metric-label">Active Tasks</div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="metric">
+              <div className="metric-value">{Math.round(teamMembers.reduce((acc, m) => acc + m.workload, 0) / teamMembers.length)}%</div>
+              <div className="metric-label">Avg Workload</div>
+            </div>
           </div>
         </div>
 
-        <div style={{
-          background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-          borderRadius: '15px',
-          padding: '25px',
-          marginBottom: '30px',
-          textAlign: 'left'
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '15px'
-          }}>
-            <h3 style={{ 
-              margin: 0, 
-              color: '#333',
-              fontSize: '1.3rem'
-            }}>
-              📋 Task List
-            </h3>
-            <button 
-              className="button" 
-              onClick={addTask}
-              style={{ fontSize: '0.9rem' }}
-            >
-              + Add Task
-            </button>
+        {/* Main Content */}
+        <div className="grid grid-2">
+          {/* Team Members */}
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">👥 Team Members</h2>
+              <button className="btn btn-primary btn-sm">+ Add Member</button>
+            </div>
+            <div>
+              {teamMembers.map(member => (
+                <div key={member.id} className="team-member">
+                  <div className="avatar">{member.avatar}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ fontWeight: '600' }}>{member.name}</div>
+                        <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>{member.role}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div className={`status ${getStatusColor(member.status)}`}>{member.status}</div>
+                        <div style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '4px' }}>
+                          {member.tasks} tasks
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ marginTop: '8px' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '4px' }}>
+                        Workload: {member.workload}%
+                      </div>
+                      <div className="progress-bar">
+                        <div 
+                          className={`progress-fill ${getWorkloadLevel(member.workload)}`}
+                          style={{ width: `${member.workload}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{ maxHeight: '150px', overflowY: 'auto' }}>
-            {tasks.map((task, index) => (
-              <div key={index} style={{
-                background: 'rgba(255,255,255,0.7)',
-                padding: '10px 15px',
-                borderRadius: '8px',
-                marginBottom: '8px',
-                color: '#333',
-                fontSize: '0.95rem',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <span style={{ marginRight: '10px' }}>✓</span>
-                {task}
-              </div>
-            ))}
+
+          {/* Active Tasks */}
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">📋 Active Tasks</h2>
+              <button className="btn btn-success btn-sm">+ New Task</button>
+            </div>
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              {tasks.map(task => (
+                <div key={task.id} className="task-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: '600', marginBottom: '4px' }}>{task.title}</div>
+                      <div className="task-meta">
+                        <span>Assigned to: <strong>{task.assignee}</strong></span>
+                        <span style={{ 
+                          color: getPriorityColor(task.priority),
+                          fontWeight: '600',
+                          marginLeft: '12px'
+                        }}>
+                          {task.priority}
+                        </span>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ 
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        backgroundColor: '#f1f5f9',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        marginBottom: '4px'
+                      }}>
+                        {task.status}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                        Due: {new Date(task.due).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div style={{
-          display: 'flex',
-          gap: '15px',
-          justifyContent: 'center',
-          flexWrap: 'wrap'
-        }}>
-          <button 
-            className="button"
-            onClick={() => alert('Dashboard is fully functional! 🎉')}
-          >
-            🎉 Test Alert
-          </button>
-          <button 
-            className="button"
-            onClick={() => window.open('https://github.com', '_blank')}
-          >
-            🔗 Open GitHub
-          </button>
-          <button 
-            className="button"
-            onClick={() => window.location.reload()}
-          >
-            🔄 Refresh Page
-          </button>
+        {/* Files & Collaboration */}
+        <div className="grid grid-2" style={{ marginTop: '20px' }}>
+          {/* Recent Files */}
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">📁 Recent Files</h2>
+              <button className="btn btn-primary btn-sm">Browse All</button>
+            </div>
+            <div>
+              {files.map((file, index) => (
+                <div key={index} className="file-item">
+                  <div>
+                    <div style={{ fontWeight: '500' }}>{file.name}</div>
+                    <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                      {file.size} • {file.modified}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn btn-sm" style={{ background: '#f1f5f9' }}>View</button>
+                    <button className="btn btn-sm" style={{ background: '#f1f5f9' }}>Edit</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">⚡ Quick Actions</h2>
+            </div>
+            <div className="grid" style={{ gap: '12px' }}>
+              <button className="btn btn-primary">🎯 Create New Project</button>
+              <button className="btn btn-success">👥 Schedule Team Meeting</button>
+              <button className="btn btn-warning">📊 Generate Report</button>
+              <button className="btn" style={{ background: '#8b5cf6', color: 'white' }}>
+                🤖 Chat with BOBB Agent
+              </button>
+              <button className="btn" style={{ background: '#06b6d4', color: 'white' }}>
+                🔄 Sync with External Tools
+              </button>
+              <button className="btn" style={{ background: '#84cc16', color: 'white' }}>
+                📈 View Analytics
+              </button>
+            </div>
+          </div>
         </div>
 
+        {/* Status Bar */}
         <div style={{
           marginTop: '30px',
-          padding: '20px',
-          background: 'rgba(34, 197, 94, 0.1)',
-          borderRadius: '10px',
-          border: '2px solid rgba(34, 197, 94, 0.3)',
-          fontSize: '1rem',
-          color: '#059669'
+          padding: '15px',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          borderRadius: '8px',
+          color: 'white',
+          textAlign: 'center'
         }}>
-          <strong>✅ FULLY OPERATIONAL!</strong><br/>
-          Dashboard is working perfectly. All features functional.<br/>
-          React hooks, state management, and interactions all working!
+          <strong>✅ Dashboard Fully Operational</strong> • 
+          Last sync: {new Date().toLocaleTimeString()} • 
+          {teamMembers.filter(m => m.status === 'online').length} members online • 
+          {tasks.filter(t => t.status === 'In Progress').length} tasks in progress
         </div>
       </div>
     </div>
